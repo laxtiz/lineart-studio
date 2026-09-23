@@ -1,18 +1,22 @@
-name: Build desktop bundles
+name: Release desktop bundles
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
+    tags:
+      - "v*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to create or publish"
+        required: true
+        type: string
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
+  group: release-${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -69,3 +73,25 @@ jobs:
           name: lineart-studio-${{ matrix.platform }}
           path: src-tauri/target/release/bundle/
           if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lineart-studio-*
+          path: release-assets
+          merge-multiple: true
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
+        run: |
+          test -n "$RELEASE_TAG"
+          test -n "$(ls -A release-assets)"
+          gh release create "$RELEASE_TAG" release-assets/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "LineartStudio $RELEASE_TAG" \
+            --generate-notes

@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "线稿上色工作室",
+  "productName": "LineartStudio",
   "version": "0.1.0",
   "identifier": "com.lineartstudio.desktop",
   "build": {
