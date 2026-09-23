@@ -89,8 +89,15 @@ jobs:
           RELEASE_TAG: ${{ github.event_name == 'push' && github.ref_name || inputs.tag }}
         run: |
           test -n "$RELEASE_TAG"
-          test -n "$(ls -A release-assets)"
-          gh release create "$RELEASE_TAG" release-assets/* \
+          shopt -s nullglob globstar
+          assets=()
+          for asset in release-assets/**/*; do
+            if [[ -f "$asset" ]]; then
+              assets+=("$asset")
+            fi
+          done
+          test "${#assets[@]}" -gt 0
+          gh release create "$RELEASE_TAG" "${assets[@]}" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --title "LineartStudio $RELEASE_TAG" \
