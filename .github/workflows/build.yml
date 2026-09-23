@@ -59,7 +59,13 @@ jobs:
       - run: npm test
       - run: npm run build
       - name: Build desktop bundle
+        if: runner.os != 'Windows'
         run: npm run tauri build -- --bundles ${{ matrix.bundles }}
+        env:
+          NO_STRIP: ${{ matrix.no_strip }}
+      - name: Build Windows bundle
+        if: runner.os == 'Windows'
+        run: npm run tauri build -- --bundles ${{ matrix.bundles }} --config '{"productName":"Lineart Studio"}'
         env:
           NO_STRIP: ${{ matrix.no_strip }}
       - uses: actions/upload-artifact@v4
