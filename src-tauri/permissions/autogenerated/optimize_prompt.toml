@@ -1,0 +1,11 @@
+# Automatically generated - DO NOT EDIT!
+
+[[permission]]
+identifier = "allow-optimize-prompt"
+description = "Enables the optimize_prompt command without any pre-configured scope."
+commands.allow = ["optimize_prompt"]
+
+[[permission]]
+identifier = "deny-optimize-prompt"
+description = "Denies the optimize_prompt command without any pre-configured scope."
+commands.deny = ["optimize_prompt"]

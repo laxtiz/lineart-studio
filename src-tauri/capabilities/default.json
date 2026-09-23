@@ -1,0 +1,18 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "allow-get-api-key-status",
+    "allow-set-api-key",
+    "allow-clear-api-key",
+    "allow-test-api-connection",
+    "allow-choose-and-import-image",
+    "allow-choose-and-save-image",
+    "allow-generate-image",
+    "allow-edit-image",
+    "allow-optimize-prompt"
+  ]
+}
