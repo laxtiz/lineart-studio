@@ -90,12 +90,14 @@ jobs:
         run: |
           test -n "$RELEASE_TAG"
           shopt -s nullglob globstar
-          assets=()
-          for asset in release-assets/**/*; do
-            if [[ -f "$asset" ]]; then
-              assets+=("$asset")
-            fi
-          done
+          assets=(
+            release-assets/**/appimage/*.AppImage
+            release-assets/**/deb/*.deb
+            release-assets/**/rpm/*.rpm
+            release-assets/**/dmg/*.dmg
+            release-assets/**/msi/*.msi
+            release-assets/**/nsis/*.exe
+          )
           test "${#assets[@]}" -gt 0
           gh release create "$RELEASE_TAG" "${assets[@]}" \
             --repo "$GITHUB_REPOSITORY" \
